@@ -15,7 +15,7 @@ function AdminOperation() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/flashcards');
+                const response = await axios.get('https://flashcard-backend-kd5h.onrender.com/flashcards');
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching flashcards:', error);
@@ -58,7 +58,7 @@ function AdminOperation() {
                 "question": question,
                 "answer": answer
             }
-            await axios.post("http://localhost:8080/flashcards", obj);
+            await axios.post("https://flashcard-backend-kd5h.onrender.com/flashcards", obj);
         } catch (err) {
             console.log("Error in adding new data");
         }
@@ -66,7 +66,7 @@ function AdminOperation() {
 
     const deleteQuestion = async () => {
         try {
-            await axios.delete(`http://localhost:8080/admin/${id}`);
+            await axios.delete(`https://flashcard-backend-kd5h.onrender.com/admin/${id}`);
         } catch (err) {
             console.log("Error in deleting the data");
         }
@@ -79,7 +79,7 @@ function AdminOperation() {
                 "question": question,
                 "answer": answer
             }
-            await axios.put(`http://localhost:8080/admin/${id}`, obj);
+            await axios.put(`https://flashcard-backend-kd5h.onrender.com/admin/${id}`, obj);
         } catch (err) {
             console.log("Error in updating the data");
         }
@@ -100,7 +100,7 @@ function AdminOperation() {
                 <Button variant="contained" onClick={() => { handleClick("add"); handleForm() }}>Add Question</Button>
                 <Button variant="contained" onClick={() => handleClick("delete")}>Delete Question</Button>
                 <Button variant="contained" onClick={() => { handleClick("update"); handleForm() }}>Update Question</Button>
-                <Button variant="contained" onClick={() => { setShowAll(true);setIsClicked(false) }}>All Questions</Button>
+                <Button variant="contained" onClick={() => { setShowAll(true); setIsClicked(false) }}>All Questions</Button>
             </div>
 
             {
