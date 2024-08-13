@@ -4,7 +4,7 @@ import axios from 'axios';
 
 function AdminOperation() {
     const [isClicked, setIsClicked] = useState(false);
-    const [isQuestion, setIsquestion] = useState(true);
+    const [isQuestion, setIsQuestion] = useState(true);
     const [id, setId] = useState(null);
     const [question, setQuestion] = useState("");
     const [answer, setAnswer] = useState("");
@@ -12,26 +12,28 @@ function AdminOperation() {
     const [showAll, setShowAll] = useState(false);
     const [data, setData] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('https://flashcard-backend-kd5h.onrender.com/flashcards');
-                setData(response.data);
-            } catch (error) {
-                console.error('Error fetching flashcards:', error);
-            }
-        };
+    // Fetch data function to be used in different parts of the component
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('https://flashcard-backend-kd5h.onrender.com/flashcards');
+            setData(response.data);
+        } catch (error) {
+            console.error('Error fetching flashcards:', error);
+        }
+    };
 
+    // Initial data fetch
+    useEffect(() => {
         fetchData();
-    }, []);
+    }, [data]);
 
     const handleForm = () => {
-        setIsquestion(true);
+        setIsQuestion(true);
     }
 
     const handleClick = (clickedBtn) => {
         setIsClicked(true);
-        setIsquestion(false);
+        setIsQuestion(false);
         setId(null);
         setQuestion("");
         setAnswer("");
@@ -54,10 +56,10 @@ function AdminOperation() {
     const addData = async () => {
         try {
             const obj = {
-                "id": id,
-                "question": question,
-                "answer": answer
-            }
+                id: id,
+                question: question,
+                answer: answer
+            };
             await axios.post("https://flashcard-backend-kd5h.onrender.com/flashcards", obj);
         } catch (err) {
             console.log("Error in adding new data");
@@ -66,7 +68,7 @@ function AdminOperation() {
 
     const deleteQuestion = async () => {
         try {
-            await axios.delete(`https://flashcard-backend-kd5h.onrender.com/admin/${id}`);
+            await axios.delete("https://flashcard-backend-kd5h.onrender.com/admin/" + id);
         } catch (err) {
             console.log("Error in deleting the data");
         }
@@ -75,20 +77,24 @@ function AdminOperation() {
     const updateQuestion = async () => {
         try {
             const obj = {
-                "id": id,
-                "question": question,
-                "answer": answer
-            }
+                id: id,
+                question: question,
+                answer: answer
+            };
             await axios.put(`https://flashcard-backend-kd5h.onrender.com/admin/${id}`, obj);
         } catch (err) {
             console.log("Error in updating the data");
         }
     }
 
-    const handleSubmit = () => {
-        if (clickedButton === "add") addData();
-        else if (clickedButton === "delete") deleteQuestion();
-        else if (clickedButton === "update") updateQuestion();
+    const handleSubmit = async () => {
+        if (clickedButton === "add") await addData();
+        else if (clickedButton === "delete") await deleteQuestion();
+        else if (clickedButton === "update") await updateQuestion();
+        
+        // Refresh data after operation
+        fetchData();
+        setIsClicked(false);  // Close the form after submission
     }
 
     return (
